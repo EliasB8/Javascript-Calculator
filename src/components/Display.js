@@ -1,10 +1,10 @@
 import React from "react";
 
-function Display() {
+function Display(props) {
   return (
     <div className="display" id="display">
-      <p className="display-row output">1 + 0 = 10</p>
-      <p className="display-row input">1 + 0</p>
+      <p className="display-row output">{props.output}</p>
+      <p className="display-row input">{props.input}</p>
     </div>
   );
 }

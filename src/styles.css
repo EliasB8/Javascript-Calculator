@@ -14,7 +14,7 @@
 
 .calculator-container {
   max-width: 450px;
-  height: 520px;
+  min-height: 520px;
   margin: auto;
   border: 5px solid #3b5249;
   border-radius: 6px;
@@ -36,7 +36,7 @@
 .display-row {
   background-color: #382933;
   height: 50%;
-  font-size: 1.87rem;
+  font-size: 2rem;
   text-align: right;
   padding: 7px;
   word-wrap: break-word;
@@ -44,6 +44,11 @@
 
 .output {
   padding-top: 5px;
+  min-height: 35px;
+}
+
+.input {
+  min-height: 35px;
 }
 
 .numpads {

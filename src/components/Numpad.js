@@ -53,3 +53,4 @@ function Numpad() {
 }
 
 export default Numpad;
+export { keypadIds };
