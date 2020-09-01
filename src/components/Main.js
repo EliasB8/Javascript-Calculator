@@ -51,7 +51,6 @@ class Main extends React.Component {
   }
 
   handleZero() {
-    // if starts with a non - zero or if there is a decimal point allow zero else don't
     if (this.state.input.length === 1 && this.state.input === "0") {
       this.setState({
         input: "0"
