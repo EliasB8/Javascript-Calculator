@@ -38,17 +38,29 @@ class Main extends React.Component {
   }
 
   handleEquals() {
-    const answer = evaluate(this.state.input);
-    this.setState((state) => ({
-      data: answer,
-      prevAns: answer,
-      input: state.input + "=" + answer
-    }));
-    // handle if user clicked equlas
+    const regex = /[+*/-]$/;
+    const doubleEqualRegex = /=/;
+    if (doubleEqualRegex.test(this.state.input)) {
+      this.setState((state) => ({
+        prevAns: state.data
+      }));
+    }
+
+    if (
+      !regex.test(this.state.input) &&
+      !doubleEqualRegex.test(this.state.input)
+    ) {
+      const answer = evaluate(this.state.input);
+      this.setState((state) => ({
+        data: answer,
+        prevAns: answer,
+        input: state.input + "=" + answer
+      }));
+    }
   }
 
   handleOperator(operator) {
-    operator = operator === "x" ? "*" : operator; // if()
+    operator = operator === "x" ? "*" : operator;
     if (this.state.prevAns) {
       this.setState((state) => ({
         input: state.prevAns + operator,
@@ -59,35 +71,24 @@ class Main extends React.Component {
       const regex = /[+*/-]$/;
       const removeSignRegex = /[+*/]-$/;
       const addSignRegex = /[+*/]$/;
-      if (removeSignRegex.test(this.state.input) && operator === "+") {
+      if (removeSignRegex.test(this.state.input) && operator !== "-") {
         this.setState((state) => ({
           input: state.input.substring(0, state.input.length - 2) + operator
         }));
-        console.log("first");
+      }
+      if (addSignRegex.test(this.state.input) && operator === "-") {
+        this.setState((state) => ({
+          input: state.input + operator
+        }));
       } else {
-        if (removeSignRegex.test(this.state.input) && operator !== "-") {
+        if (regex.test(this.state.input)) {
           this.setState((state) => ({
-            input: state.input.substring(0, state.input.length - 2) + operator
+            input: state.input.substring(0, state.input.length - 1) + operator
           }));
-          console.log("2first");
-        }
-        if (addSignRegex.test(this.state.input) && operator === "-") {
+        } else {
           this.setState((state) => ({
             input: state.input + operator
           }));
-          console.log("3first");
-        } else {
-          if (regex.test(this.state.input)) {
-            this.setState((state) => ({
-              input: state.input.substring(0, state.input.length - 1) + operator
-            }));
-            console.log("4first");
-          } else {
-            this.setState((state) => ({
-              input: state.input + operator
-            }));
-            console.log("5first");
-          }
         }
       }
     }
@@ -117,36 +118,23 @@ class Main extends React.Component {
   }
 
   handleNumber(number) {
-    // const regex = /[+*/-]/;
-    // if (this.state.prevAns) {
-    //   this.setState((state) => ({
-    //     input: number,
-    //     data: number,
-    //     prevAns: ""
-    //   }));
-    // } else {
-    //   this.setState((state) => ({
-    //     input: state.input + number,
-    //     data: regex.test(this.state.data) ? number : state.data + number
-    //   }));
-    // }
-    if (this.state.prevAns === "") {
-      this.setState((state) => ({
-        input: state.input + number,
-        data: state.data + number
-      }));
-    } else {
-      this.setState((state) => ({
+    const regex = /[+*/-]/;
+    if (this.state.prevAns) {
+      this.setState({
         input: number,
         data: number,
         prevAns: ""
+      });
+    } else {
+      this.setState((state) => ({
+        input: state.input + number,
+        data: regex.test(this.state.data) ? number : state.data + number
       }));
     }
   }
 
   handleClick(event) {
     const keyClicked = event.target.value;
-    // console.log(keyClicked);
     switch (keyClicked) {
       case "AC":
         this.handleClear();
