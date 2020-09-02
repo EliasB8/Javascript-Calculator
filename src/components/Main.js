@@ -98,16 +98,42 @@ class Main extends React.Component {
   }
 
   handleDecimal() {
-    const regex = /[.]/;
-    if (!regex.test(this.state.data)) {
+    //     if (
+    //       isNaN(this.state.data) ||
+    //       this.state.data === "undefined" ||
+    //       this.state.data === "Infinity"
+    //     ) {
+    //       this.setState({
+    //         input: "",
+    //         data: "",
+    //         prevAns: ""
+    //       });
+    //     }
+    if (this.state.prevAns) {
       this.setState((state) => ({
-        input: state.input + ".",
-        data: state.data + "."
+        input: ".",
+        prevAns: "",
+        data: "."
       }));
+    } else {
+      const regex = /[.]/;
+      if (!regex.test(this.state.data)) {
+        this.setState((state) => ({
+          input: state.input + ".",
+          data: state.data + "."
+        }));
+      }
     }
   }
 
   handleZero() {
+    if (this.state.prevAns) {
+      this.setState((state) => ({
+        input: "",
+        prevAns: "",
+        data: ""
+      }));
+    }
     const regex = /(^.|^[1-9][.]|^[1-9])/;
     if (regex.test(this.state.input)) {
       this.setState((state) => ({
