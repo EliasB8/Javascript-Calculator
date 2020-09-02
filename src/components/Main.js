@@ -1,7 +1,7 @@
 import React from "react";
 import Display from "./Display";
 import Numpad, { keypadIds } from "./Numpad";
-// import { evaluate } from "mathjs";
+import { evaluate } from "mathjs";
 
 class Main extends React.Component {
   constructor(props) {
@@ -33,102 +33,120 @@ class Main extends React.Component {
     this.setState({
       input: "",
       prevAns: "",
-      currentData: ""
+      data: ""
     });
   }
 
   handleEquals() {
-    //   let answer = evaluate(this.state.input);
-    //   this.setState((state) => ({
-    //     data: answer,
-    //     prevAns: answer,
-    //     input: state.input + "=" + answer
-    //   }));
+    const answer = evaluate(this.state.input);
+    this.setState((state) => ({
+      data: answer,
+      prevAns: answer,
+      input: state.input + "=" + answer
+    }));
+    // handle if user clicked equlas
   }
 
   handleOperator(operator) {
-    //   operator = operator === "x" ? "*" : operator; // if()
-    //   if (this.state.prevAns) {
-    //     this.setState((state) => ({
-    //       input: state.prevAns + operator,
-    //       prevAns: "",
-    //       data: operator
-    //     }));
-    //   } else {
-    //     const regex = /[+*/-]$/;
-    //     const removeSignRegex = /[+*/]-$/;
-    //     const addSignRegex = /[+*/]$/;
-    //     if (removeSignRegex.test(this.state.input) && operator === "+") {
-    //       this.setState((state) => ({
-    //         input: state.input.substring(0, state.input.length - 1)
-    //       }));
-    //     } else {
-    //       if (removeSignRegex.test(this.state.input) && operator !== "-") {
-    //         this.setState((state) => ({
-    //           input: state.input.substring(0, state.input.length - 2) + operator
-    //         }));
-    //       }
-    //       if (addSignRegex.test(this.state.input) && operator === "-") {
-    //         this.setState((state) => ({
-    //           input: state.input + operator
-    //         }));
-    //       } else {
-    //         if (regex.test(this.state.input)) {
-    //           this.setState((state) => ({
-    //             input: state.input.substring(0, state.input.length - 1) + operator
-    //           }));
-    //         } else {
-    //           this.setState((state) => ({
-    //             input: state.input + operator
-    //           }));
-    //         }
-    //       }
-    //     }
-    //   }
-    //   this.setState({
-    //     data: operator
-    //   });
+    operator = operator === "x" ? "*" : operator; // if()
+    if (this.state.prevAns) {
+      this.setState((state) => ({
+        input: state.prevAns + operator,
+        prevAns: "",
+        data: operator
+      }));
+    } else {
+      const regex = /[+*/-]$/;
+      const removeSignRegex = /[+*/]-$/;
+      const addSignRegex = /[+*/]$/;
+      if (removeSignRegex.test(this.state.input) && operator === "+") {
+        this.setState((state) => ({
+          input: state.input.substring(0, state.input.length - 2) + operator
+        }));
+        console.log("first");
+      } else {
+        if (removeSignRegex.test(this.state.input) && operator !== "-") {
+          this.setState((state) => ({
+            input: state.input.substring(0, state.input.length - 2) + operator
+          }));
+          console.log("2first");
+        }
+        if (addSignRegex.test(this.state.input) && operator === "-") {
+          this.setState((state) => ({
+            input: state.input + operator
+          }));
+          console.log("3first");
+        } else {
+          if (regex.test(this.state.input)) {
+            this.setState((state) => ({
+              input: state.input.substring(0, state.input.length - 1) + operator
+            }));
+            console.log("4first");
+          } else {
+            this.setState((state) => ({
+              input: state.input + operator
+            }));
+            console.log("5first");
+          }
+        }
+      }
+    }
+    this.setState({
+      data: operator
+    });
   }
 
   handleDecimal() {
-    //   const regex = /[.]/;
-    //   if (!regex.test(this.state.data)) {
-    //     this.setState((state) => ({
-    //       input: state.input + ".",
-    //       data: state.data + "."
-    //     }));
-    //   }
+    const regex = /[.]/;
+    if (!regex.test(this.state.data)) {
+      this.setState((state) => ({
+        input: state.input + ".",
+        data: state.data + "."
+      }));
+    }
   }
 
   handleZero() {
-    //   const regex = /(^.|^[1-9][.]|^[1-9])/;
-    //   if (regex.test(this.state.input)) {
-    //     this.setState((state) => ({
-    //       input: state.input + "0",
-    //       data: state.data + "0"
-    //     }));
-    //   }
+    const regex = /(^.|^[1-9][.]|^[1-9])/;
+    if (regex.test(this.state.input)) {
+      this.setState((state) => ({
+        input: state.input + "0",
+        data: state.data + "0"
+      }));
+    }
   }
 
   handleNumber(number) {
-    //   const regex = /[+*/-]/;
-    //   if (this.state.prevAns) {
-    //     this.setState((state) => ({
-    //       input: number,
-    //       data: number,
-    //       prevAns: ""
-    //     }));
-    //   } else {
-    //     this.setState((state) => ({
-    //       input: state.input + number,
-    //       data: regex.test(this.state.data) ? number : state.data + number
-    //     }));
-    //   }
+    // const regex = /[+*/-]/;
+    // if (this.state.prevAns) {
+    //   this.setState((state) => ({
+    //     input: number,
+    //     data: number,
+    //     prevAns: ""
+    //   }));
+    // } else {
+    //   this.setState((state) => ({
+    //     input: state.input + number,
+    //     data: regex.test(this.state.data) ? number : state.data + number
+    //   }));
+    // }
+    if (this.state.prevAns === "") {
+      this.setState((state) => ({
+        input: state.input + number,
+        data: state.data + number
+      }));
+    } else {
+      this.setState((state) => ({
+        input: number,
+        data: number,
+        prevAns: ""
+      }));
+    }
   }
 
   handleClick(event) {
     const keyClicked = event.target.value;
-    console.log(keyClicked);
+    // console.log(keyClicked);
     switch (keyClicked) {
       case "AC":
         this.handleClear();
