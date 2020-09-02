@@ -2,9 +2,9 @@ import React from "react";
 
 function Keypad(props) {
   return (
-    <div className="keypad" id={props.id}>
+    <button className="keypad" id={props.id} value={props.input}>
       {props.input}
-    </div>
+    </button>
   );
 }
 

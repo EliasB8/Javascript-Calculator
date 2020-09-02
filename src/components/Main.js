@@ -1,83 +1,134 @@
 import React from "react";
 import Display from "./Display";
 import Numpad, { keypadIds } from "./Numpad";
+// import { evaluate } from "mathjs";
 
 class Main extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      input: "0",
-      output: "",
-      prevAns: ""
+      input: "",
+      prevAns: "",
+      data: ""
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleClear = this.handleClear.bind(this);
     this.handleOperator = this.handleOperator.bind(this);
-    this.handleBracket = this.handleBracket.bind(this);
     this.handleDecimal = this.handleDecimal.bind(this);
     this.handleZero = this.handleZero.bind(this);
     this.handleNumber = this.handleNumber.bind(this);
     this.handleEquals = this.handleEquals.bind(this);
   }
 
+  componentDidMount() {
+    keypadIds.forEach((item) => {
+      document.getElementById(item).addEventListener("click", (e) => {
+        this.handleClick(e);
+      });
+    });
+  }
+
   handleClear() {
     this.setState({
-      input: "0",
-      output: "",
-      prevAns: ""
+      input: "",
+      prevAns: "",
+      currentData: ""
     });
   }
 
   handleEquals() {
-    console.log("=");
+    //   let answer = evaluate(this.state.input);
+    //   this.setState((state) => ({
+    //     data: answer,
+    //     prevAns: answer,
+    //     input: state.input + "=" + answer
+    //   }));
   }
 
   handleOperator(operator) {
-    console.log(operator);
-  }
-
-  handleBracket(bracket) {
-    console.log(bracket);
+    //   operator = operator === "x" ? "*" : operator; // if()
+    //   if (this.state.prevAns) {
+    //     this.setState((state) => ({
+    //       input: state.prevAns + operator,
+    //       prevAns: "",
+    //       data: operator
+    //     }));
+    //   } else {
+    //     const regex = /[+*/-]$/;
+    //     const removeSignRegex = /[+*/]-$/;
+    //     const addSignRegex = /[+*/]$/;
+    //     if (removeSignRegex.test(this.state.input) && operator === "+") {
+    //       this.setState((state) => ({
+    //         input: state.input.substring(0, state.input.length - 1)
+    //       }));
+    //     } else {
+    //       if (removeSignRegex.test(this.state.input) && operator !== "-") {
+    //         this.setState((state) => ({
+    //           input: state.input.substring(0, state.input.length - 2) + operator
+    //         }));
+    //       }
+    //       if (addSignRegex.test(this.state.input) && operator === "-") {
+    //         this.setState((state) => ({
+    //           input: state.input + operator
+    //         }));
+    //       } else {
+    //         if (regex.test(this.state.input)) {
+    //           this.setState((state) => ({
+    //             input: state.input.substring(0, state.input.length - 1) + operator
+    //           }));
+    //         } else {
+    //           this.setState((state) => ({
+    //             input: state.input + operator
+    //           }));
+    //         }
+    //       }
+    //     }
+    //   }
+    //   this.setState({
+    //     data: operator
+    //   });
   }
 
   handleDecimal() {
-    const regex = /[.]/;
-    if (!regex.test(this.state.input)) {
-      this.setState((state) => ({
-        input: state.input + "."
-      }));
-    }
+    //   const regex = /[.]/;
+    //   if (!regex.test(this.state.data)) {
+    //     this.setState((state) => ({
+    //       input: state.input + ".",
+    //       data: state.data + "."
+    //     }));
+    //   }
   }
 
   handleZero() {
-    if (this.state.input.length === 1 && this.state.input === "0") {
-      this.setState({
-        input: "0"
-      });
-    } else {
-      const regex = /(^0.|^[1-9][.]|^[1-9])/;
-      if (regex.test(this.state.input)) {
-        this.setState((state) => ({
-          input: state.input + "0"
-        }));
-      }
-    }
+    //   const regex = /(^.|^[1-9][.]|^[1-9])/;
+    //   if (regex.test(this.state.input)) {
+    //     this.setState((state) => ({
+    //       input: state.input + "0",
+    //       data: state.data + "0"
+    //     }));
+    //   }
   }
 
   handleNumber(number) {
-    if (this.state.input.length === 1) {
-      this.setState({
-        input: ""
-      });
-    }
-    this.setState((state) => ({
-      input: state.input + number
-    }));
+    //   const regex = /[+*/-]/;
+    //   if (this.state.prevAns) {
+    //     this.setState((state) => ({
+    //       input: number,
+    //       data: number,
+    //       prevAns: ""
+    //     }));
+    //   } else {
+    //     this.setState((state) => ({
+    //       input: state.input + number,
+    //       data: regex.test(this.state.data) ? number : state.data + number
+    //     }));
+    //   }
   }
 
   handleClick(event) {
-    const keyClicked = event.target.innerText;
+    const keyClicked = event.target.value;
+    console.log(keyClicked);
     switch (keyClicked) {
       case "AC":
         this.handleClear();
@@ -85,12 +136,8 @@ class Main extends React.Component {
       case "+":
       case "-":
       case "x":
-      case "÷":
+      case "/":
         this.handleOperator(keyClicked);
-        break;
-      case "(":
-      case ")":
-        this.handleBracket(keyClicked);
         break;
       case ".":
         this.handleDecimal();
@@ -106,21 +153,13 @@ class Main extends React.Component {
         break;
     }
   }
-  componentDidMount() {
-    keypadIds.forEach((item) => {
-      document.getElementById(item).addEventListener("click", (e) => {
-        this.handleClick(e);
-      });
-    });
-  }
 
   render() {
     return (
       <div className="calculator-container">
         <Display
           input={this.state.input}
-          output={this.state.output}
-          answer={this.state.prevAns}
+          data={this.state.input === "" ? "0" : this.state.data}
         />
         <Numpad />
       </div>
