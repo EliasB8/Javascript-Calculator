@@ -1,6 +1,7 @@
 import React from "react";
 import Keypad from "./Keypad";
 
+// creating array of keypad names for id
 const keypadIds = [
   "clear",
   "divide",
@@ -21,6 +22,7 @@ const keypadIds = [
   "equals"
 ];
 
+// creating array of keypad values
 const keypadValues = [
   "AC",
   "/",

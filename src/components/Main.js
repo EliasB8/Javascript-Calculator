@@ -7,11 +7,14 @@ class Main extends React.Component {
   constructor(props) {
     super(props);
 
+    // Initializing state
     this.state = {
       input: "",
       prevAns: "",
       data: ""
     };
+
+    // binding methods that will update the state
     this.handleClick = this.handleClick.bind(this);
     this.handleClear = this.handleClear.bind(this);
     this.handleOperator = this.handleOperator.bind(this);
@@ -21,6 +24,7 @@ class Main extends React.Component {
     this.handleEquals = this.handleEquals.bind(this);
   }
 
+  // adding a click event listener when component is mounted
   componentDidMount() {
     keypadIds.forEach((item) => {
       document.getElementById(item).addEventListener("click", (e) => {
@@ -29,6 +33,16 @@ class Main extends React.Component {
     });
   }
 
+  // removing the click event listener
+  componentWillUnmount() {
+    keypadIds.forEach((item) => {
+      document.getElementById(item).removeEventListener("click", (e) => {
+        this.handleClick(e);
+      });
+    });
+  }
+
+  // Clearing all data
   handleClear() {
     this.setState({
       input: "",
@@ -37,18 +51,31 @@ class Main extends React.Component {
     });
   }
 
+  // Handling equal operation
   handleEquals() {
+
+    // regex for checking if the user clicked equal while the last input is an operator
     const regex = /[+*/-]$/;
+
+    // regex for checking dor double equals
     const doubleEqualRegex = /=/;
+
+
+    // regex for operations like /8 or *8
+    const errorCheckRegex = /^[*/][0-9]$/
+
+    // if it is double equal click display previous answer
     if (doubleEqualRegex.test(this.state.input)) {
       this.setState((state) => ({
         prevAns: state.data
       }));
     }
 
+    // if it is not ended in one of the three case then display the calculation
     if (
       !regex.test(this.state.input) &&
-      !doubleEqualRegex.test(this.state.input)
+      !doubleEqualRegex.test(this.state.input) &&
+      !errorCheckRegex.test(this.state.input)
     ) {
       const answer = evaluate(this.state.input);
       this.setState((state) => ({
@@ -59,8 +86,12 @@ class Main extends React.Component {
     }
   }
 
+  // Handling each operator
   handleOperator(operator) {
+    // Changing X to *
     operator = operator === "x" ? "*" : operator;
+
+    // if there is a previous answer and operator clicked use the prev ans
     if (this.state.prevAns) {
       this.setState((state) => ({
         input: state.prevAns + operator,
@@ -68,24 +99,34 @@ class Main extends React.Component {
         data: operator
       }));
     } else {
+      // regex for ending in one of the operators
       const regex = /[+*/-]$/;
+      // regex for checking for allowing for negative
       const removeSignRegex = /[+*/]-$/;
+      // regex for not updating operators except for -
       const addSignRegex = /[+*/]$/;
+
+      // if user inserted an operator and then negative(minus) sign and then another operator different from -
+      // remove the previous two operators and use the last operator
       if (removeSignRegex.test(this.state.input) && operator !== "-") {
         this.setState((state) => ({
           input: state.input.substring(0, state.input.length - 2) + operator
         }));
       }
+
+      // allow negative number via - sign
       if (addSignRegex.test(this.state.input) && operator === "-") {
         this.setState((state) => ({
           input: state.input + operator
         }));
       } else {
+        // if not - update operator for more than one click of operator
         if (regex.test(this.state.input)) {
           this.setState((state) => ({
             input: state.input.substring(0, state.input.length - 1) + operator
           }));
         } else {
+          // if first click no matter what allow the operation
           this.setState((state) => ({
             input: state.input + operator
           }));
@@ -97,24 +138,14 @@ class Main extends React.Component {
     });
   }
 
+  // handling decimals
   handleDecimal() {
-    //     if (
-    //       isNaN(this.state.data) ||
-    //       this.state.data === "undefined" ||
-    //       this.state.data === "Infinity"
-    //     ) {
-    //       this.setState({
-    //         input: "",
-    //         data: "",
-    //         prevAns: ""
-    //       });
-    //     }
     if (this.state.prevAns) {
-      this.setState((state) => ({
+      this.setState({
         input: ".",
         prevAns: "",
         data: "."
-      }));
+      });
     } else {
       const regex = /[.]/;
       if (!regex.test(this.state.data)) {
@@ -126,6 +157,7 @@ class Main extends React.Component {
     }
   }
 
+  // handling zero
   handleZero() {
     if (this.state.prevAns) {
       this.setState((state) => ({
@@ -143,6 +175,7 @@ class Main extends React.Component {
     }
   }
 
+  // handling number
   handleNumber(number) {
     const regex = /[+*/-]/;
     if (this.state.prevAns) {
@@ -159,6 +192,7 @@ class Main extends React.Component {
     }
   }
 
+  // handling click event
   handleClick(event) {
     const keyClicked = event.target.value;
     switch (keyClicked) {
